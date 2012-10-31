@@ -104,6 +104,22 @@ class Capture {
 	// This is an abstract base class for implementing platform specific devices
 	class Device {
 	 public:
+#if defined( CINDER_MSW )
+		enum SettingsFilterType
+		{
+			SFT_Brightness,
+			SFT_Contrast,
+			SFT_Hue,
+			SFT_Saturation,
+			SFT_Sharpness,
+			SFT_Gamma,
+			SFT_ColorEnable,
+			SFT_WhiteBalance,
+			SFT_BacklightCompensation,
+			SFT_Gain,
+		};
+#endif
+
 		virtual ~Device() {}
 		//! Returns the human-readable name of the device.
 		const std::string&					getName() const { return mName; }
@@ -113,7 +129,12 @@ class Capture {
 		virtual bool						isConnected() const = 0;
 		//! Returns the OS-specific unique identifier
 		virtual Capture::DeviceIdentifier	getUniqueId() const = 0;
-	 protected:
+
+#if defined( CINDER_MSW )
+		virtual bool                        getSettingsFilter( SettingsFilterType settingsFilterType, long &min, long &max, long &step, long &value, long &def ) const = 0;
+		virtual bool                        setSettingsFilter( SettingsFilterType settingsFilterType, long value ) const = 0;
+#endif
+	protected:
 		Device() {}
 		std::string		mName;
 	};

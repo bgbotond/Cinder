@@ -58,6 +58,9 @@ class CaptureImplDirectShow {
 		bool						isConnected() const;
 		Capture::DeviceIdentifier	getUniqueId() const { return mUniqueId; }
 
+		bool						getSettingsFilter( SettingsFilterType settingsFilterType, long &min, long &max, long &step, long &value, long &def ) const;
+		bool						setSettingsFilter( SettingsFilterType settingsFilterType, long value ) const;
+
 		Device( const std::string &name, int uniqueId ) : Capture::Device(), mUniqueId( uniqueId ) { mName = name; }
 	 protected:
 		int				mUniqueId;

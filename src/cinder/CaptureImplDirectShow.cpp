@@ -124,6 +124,54 @@ bool CaptureImplDirectShow::Device::isConnected() const
 	return CaptureMgr::instanceVI()->isDeviceConnected( mUniqueId );
 }
 
+bool CaptureImplDirectShow::Device::getSettingsFilter( SettingsFilterType settingsFilterType, long &min, long &max, long &step, long &value, long &def ) const
+{
+	long flags;
+	long property;
+
+	switch( settingsFilterType )
+	{
+	case SFT_Brightness            : property = CaptureMgr::instanceVI()->propBrightness;            break;
+	case SFT_Contrast              : property = CaptureMgr::instanceVI()->propContrast;              break;
+	case SFT_Hue                   : property = CaptureMgr::instanceVI()->propHue;                   break;
+	case SFT_Saturation            : property = CaptureMgr::instanceVI()->propSaturation;            break;
+	case SFT_Sharpness             : property = CaptureMgr::instanceVI()->propSharpness;             break;
+	case SFT_Gamma                 : property = CaptureMgr::instanceVI()->propGamma;                 break;
+	case SFT_ColorEnable           : property = CaptureMgr::instanceVI()->propColorEnable;           break;
+	case SFT_WhiteBalance          : property = CaptureMgr::instanceVI()->propWhiteBalance;          break;
+	case SFT_BacklightCompensation : property = CaptureMgr::instanceVI()->propBacklightCompensation; break;
+	case SFT_Gain                  : property = CaptureMgr::instanceVI()->propGain;                  break;
+	}
+
+	return CaptureMgr::instanceVI()->getVideoSettingFilter( getUniqueId(), property, min, max, step, value, flags, def );
+}
+
+bool CaptureImplDirectShow::Device::setSettingsFilter( SettingsFilterType settingsFilterType, long value ) const
+{
+	long property;
+
+	switch( settingsFilterType )
+	{
+	case SFT_Brightness            : property = CaptureMgr::instanceVI()->propBrightness;            break;
+	case SFT_Contrast              : property = CaptureMgr::instanceVI()->propContrast;              break;
+	case SFT_Hue                   : property = CaptureMgr::instanceVI()->propHue;                   break;
+	case SFT_Saturation            : property = CaptureMgr::instanceVI()->propSaturation;            break;
+	case SFT_Sharpness             : property = CaptureMgr::instanceVI()->propSharpness;             break;
+	case SFT_Gamma                 : property = CaptureMgr::instanceVI()->propGamma;                 break;
+	case SFT_ColorEnable           : property = CaptureMgr::instanceVI()->propColorEnable;           break;
+	case SFT_WhiteBalance          : property = CaptureMgr::instanceVI()->propWhiteBalance;          break;
+	case SFT_BacklightCompensation : property = CaptureMgr::instanceVI()->propBacklightCompensation; break;
+	case SFT_Gain                  : property = CaptureMgr::instanceVI()->propGain;                  break;
+	}
+
+	/*
+		from strmif.h
+		VideoProcAmp_Flags_Auto   = 0x1
+		VideoProcAmp_Flags_Manual = 0x2
+	*/
+	return CaptureMgr::instanceVI()->setVideoSettingFilter( getUniqueId(), property, value, 2 );
+}
+
 const vector<Capture::DeviceRef>& CaptureImplDirectShow::getDevices( bool forceRefresh )
 {
 	if( sDevicesEnumerated && ( ! forceRefresh ) )
